@@ -2880,17 +2880,7 @@ func ExtractCwdFromSession(path string) string {
 }
 
 func truncate(s string, maxLen int) string {
-	s = strings.TrimSpace(s)
-	if len(s) <= maxLen {
-		return s
-	}
-	// Truncate at a valid rune boundary to avoid producing
-	// invalid UTF-8.
-	r := []rune(s)
-	if len(r) <= maxLen {
-		return s
-	}
-	return string(r[:maxLen]) + "..."
+	return stringutil.TruncateRunes(strings.TrimSpace(s), maxLen, "...")
 }
 
 // extractRenameName returns the argument of a Claude Code /rename

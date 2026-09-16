@@ -738,12 +738,7 @@ func stripControls(s string) string {
 // finish_reason or entry field can approach the transport limit, and these
 // errors persist into per-session failure rows.
 func boundedToken(value string, maxRunes int) string {
-	value = stripControls(value)
-	runes := []rune(value)
-	if len(runes) <= maxRunes {
-		return value
-	}
-	return string(runes[:maxRunes]) + "…(truncated)"
+	return stringutil.TruncateRunes(stripControls(value), maxRunes, "…(truncated)")
 }
 
 // parseEntries decodes and validates distilled content against the same

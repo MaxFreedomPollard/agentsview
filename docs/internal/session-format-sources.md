@@ -324,10 +324,12 @@ add an archived or maintained mirror without replacing the original identity.
   physical inputs. Reverified 2026-09-16 against the persisted-output reader
   and `TestClaudePersistedToolResultUTF8`: the 16 MiB display cap backs up to
   a UTF-8 boundary before appending its truncation notice. This is an
-  Agentsview limit, not a producer-format limit. Reverified 2026-09-10 that
-  hosted tool parsing derives skill names from recorded paths without
-  consulting worker-local `SKILL.md` frontmatter or the local parse cache; local
-  parsing retains frontmatter lookup.
+  Agentsview limit, not a producer-format limit. The shared first-message
+  preview helper retains its rune-count limit, whitespace trimming, and
+  trailing `...`, as covered by `TestTruncateRespectsRuneBoundaries`. Reverified
+  2026-09-10 that hosted tool parsing derives skill names from recorded paths
+  without consulting worker-local `SKILL.md` frontmatter or the local parse
+  cache; local parsing retains frontmatter lookup.
   `TestHostedSkillInferenceKeepsNamesLexical` covers this boundary. Reverified
   2026-08-22 against local sessions launched from repository-local
   `REPO/.claude/worktrees/<generated-name>` worktrees: the transcript retains
@@ -2778,7 +2780,10 @@ schemas keep their existing ordering behavior.
   services, but Agentsview does not join that accounting store to session
   files; cache, reasoning totals, and USD cost are therefore absent.
 - **Agentsview:** `internal/parser/qwenpaw.go` and
-  `internal/parser/qwenpaw_provider.go`.
+  `internal/parser/qwenpaw_provider.go`. Reverified 2026-09-16 against the
+  parser: first-message previews keep at most 300 runes without a suffix. The
+  shared truncation helper preserves that display rule; the recorded format
+  and usage handling are unchanged.
 
 ## Shelley (`shelley`)
 

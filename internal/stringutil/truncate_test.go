@@ -28,3 +28,28 @@ func TestSafeTruncate(t *testing.T) {
 		})
 	}
 }
+
+func TestTruncateRunes(t *testing.T) {
+	for _, tt := range []struct {
+		name, input  string
+		max          int
+		suffix, want string
+	}{
+		{"empty", "", 0, "...", ""},
+		{"zero", "abc", 0, "...", "..."},
+		{"fits", "hi", 10, "...", "hi"},
+		{"exact", "hello", 5, "...", "hello"},
+		{"ascii", "hello world", 5, "...", "hello..."},
+		{"no suffix", "hello world", 5, "", "hello"},
+		{"two-byte", "a\u00e9z", 2, "...", "a\u00e9..."},
+		{"three-byte", "\u65e5\u672c\u8a9e", 2, "...", "\u65e5\u672c..."},
+		{"four-byte", "a\U0001f642z", 2, "\u2026", "a\U0001f642\u2026"},
+		{"multibyte fits", "\u65e5\u672c", 2, "...", "\u65e5\u672c"},
+		{"whitespace retained", " abc ", 3, "", " ab"},
+		{"combining rune", "e\u0301x", 1, "", "e"},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, TruncateRunes(tt.input, tt.max, tt.suffix))
+		})
+	}
+}

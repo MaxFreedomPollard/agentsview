@@ -140,6 +140,10 @@ and can mirror data to PostgreSQL or DuckDB.
 ## Conventions
 
 - Prefer the standard library over new dependencies.
+- Use `internal/stringutil.SafeTruncate` for byte-limited display text. Add
+  truncation markers at the call site and reserve their bytes when the limit
+  includes them. Keep rune-count limits distinct from byte limits; the helper
+  assumes valid UTF-8 and does not sanitize malformed input.
 - Do not use emojis in code or output.
 - Format Markdown with `mdformat --wrap 80` when `mdformat` and
   `mdformat-tables` are available.

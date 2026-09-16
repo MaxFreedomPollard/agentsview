@@ -321,11 +321,15 @@ add an archived or maintained mirror without replacing the original identity.
   `tool-results/` directory and, for subagents, the enclosing parent session's
   `tool-results/` directory. These immutable companions are captured with the
   appendable transcript so a reconstructed tree preserves the parser's
-  physical inputs. Reverified 2026-09-10 that hosted tool parsing derives
-  skill names from recorded paths without consulting worker-local `SKILL.md`
-  frontmatter or the local parse cache; local parsing retains frontmatter
-  lookup. `TestHostedSkillInferenceKeepsNamesLexical` covers this boundary.
-  Reverified 2026-08-22 against local sessions launched from repository-local
+  physical inputs. Reverified 2026-09-16 against the persisted-output reader
+  and `TestClaudePersistedToolResultUTF8`: the 16 MiB display cap backs up to
+  a UTF-8 boundary before appending its truncation notice. This is an
+  Agentsview limit, not a producer-format limit. Reverified 2026-09-10 that
+  hosted tool parsing derives skill names from recorded paths without
+  consulting worker-local `SKILL.md` frontmatter or the local parse cache; local
+  parsing retains frontmatter lookup.
+  `TestHostedSkillInferenceKeepsNamesLexical` covers this boundary. Reverified
+  2026-08-22 against local sessions launched from repository-local
   `REPO/.claude/worktrees/<generated-name>` worktrees: the transcript retains
   the generated worktree path after that checkout is deleted, so Agentsview
   recognizes the anchored layout and attributes it to `REPO`. Evidence remains
@@ -1295,6 +1299,10 @@ schemas keep their existing ordering behavior.
   `internal/parser/kilo_legacy_provider.go`; the parser borrows RooCode's
   Cline message handling (tool-call pairing, reasoning, compact boundaries,
   error linking). New sessions stopped after the OpenCode migration.
+  Reverified 2026-09-16 against the parser and
+  `TestKiloLegacySessionNameUTF8`: Agentsview derives the display title from
+  the first user message and clips it on a UTF-8 boundary within the existing
+  80-byte budget, including `...`. This does not change the recorded format.
 
 ## Roo Code (`roocode`)
 

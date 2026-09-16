@@ -18,6 +18,7 @@ import (
 	"unicode/utf8"
 
 	"go.kenn.io/agentsview/internal/config"
+	"go.kenn.io/agentsview/internal/stringutil"
 )
 
 // ErrContextOverflow reports a prompt the server rejected as too large for
@@ -691,15 +692,7 @@ func (c *Client) responseDetail(raw []byte) string {
 		return "(response body withheld: endpoint URL carries " +
 			"credential material)"
 	}
-	detail := stripControls(string(raw))
-	if len(detail) > 200 {
-		cut := 200
-		for cut > 0 && !utf8.RuneStart(detail[cut]) {
-			cut--
-		}
-		detail = detail[:cut]
-	}
-	return detail
+	return stringutil.SafeTruncate(stripControls(string(raw)), 200)
 }
 
 // transportErrorDetail prepares a transport-layer error's text for error

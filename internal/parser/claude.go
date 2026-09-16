@@ -21,6 +21,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/tidwall/gjson"
+	"go.kenn.io/agentsview/internal/stringutil"
 )
 
 var (
@@ -2442,8 +2443,8 @@ func readClaudePersistedToolResultContext(
 			return "", false, nil
 		}
 		if len(b) > maxPersistedToolResultSize {
-			b = b[:maxPersistedToolResultSize]
-			b = append(b, "\n\n[agentsview: persisted tool result truncated at 16 MiB]"...)
+			return stringutil.SafeTruncate(string(b), maxPersistedToolResultSize) +
+				"\n\n[agentsview: persisted tool result truncated at 16 MiB]", true, nil
 		}
 		return string(b), true, nil
 	}
